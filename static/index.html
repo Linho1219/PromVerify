@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prom2024 验票平台</title>
+    <script src="vue.global.js"></script>
+    <script src="lodash.js"></script>
+    <script src="pinyin-pro.js"></script>
+    <script src="script.js"></script>
+    <style>
+      html {
+        background: #131313;
+        color: #fff;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="body">
+      <h1>
+        Prom 2024 验票平台
+        <span v-if="!notLogin">
+          <span
+            id="delayTime"
+            :class="(delay==='LOST')?'lost slow':(delay>=500?'slow':'normal')"
+            >{{delay}}</span
+          >
+          <span id="personIn">{{personInCount}}</span>
+          <span id="personOut">{{personOutCount}}</span>
+        </span>
+        <button id="fullscreen" @click="fs()">
+          <i class="icon">{{fullscreen?'&#xE1D8;':'&#xE1D9;'}}</i>
+        </button>
+      </h1>
+      <div id="main">
+        <div v-if="notLogin" id="welcome" class="frame">
+          <button @click="uploading=true" id="upload" class="welcomeBtn">
+            <i class="icon">&#xE8F4;</i>
+            导入新数据
+          </button>
+          <button @click="useReady" id="useReady" class="welcomeBtn">
+            <i class="icon">&#xE78C;</i>
+            使用原数据
+          </button>
+          <div v-if="uploading" id="uploadPopup">
+            <textarea v-model.trim="rawText" id="uploadTextbox"></textarea>
+            <div class="uploadBtns">
+              <button
+                id="uploadConfirm"
+                class="uploadBtn"
+                @click="uploadConfirm()"
+              >
+                <i class="icon">&#xF78C;</i> 添加配置
+              </button>
+              <button
+                id="uploadCover"
+                class="uploadBtn"
+                @click="uploadConfirm(true)"
+              >
+                <i class="icon">&#xE822;</i> 覆盖配置
+              </button>
+              <button
+                id="uploadCancel"
+                class="uploadBtn"
+                @click="uploading=false"
+              >
+                <i class="icon">&#xF78A;</i> 取消配置
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-else id="work" class="frame">
+          <div id="result">
+            <div
+              v-for="person in result"
+              class="personDiv"
+              :class="(person.union?'union ':'notUnion ')+(person.in?'in':'out')"
+              @click="personIn(person.originalId||person.id)"
+            >
+              <span
+                class="logo icon"
+                @click.stop="person.union&&search(person.order)"
+                >{{person.union?'\uF168':'\uE136'}}</span
+              >
+              <span class="go" :class="person.in?'in':'out'"
+                ><i class="icon">&#xE17C;</i></span
+              >
+              <span class="name personInfo">{{person.name}} </span>
+              <span
+                v-if="person.union"
+                class="unionInfo"
+                :class="queryById(person.unionId).in?'in':'out'"
+                @click.stop="personIn(person.unionId)"
+              >
+                <span class="unionName">{{person.unionName}}</span>
+                <!--<span class="unionId">{{person.unionId.slice(-6)}}</span>--></span
+              >
+              <span class="pinyin personInfo">
+                <span class="gender"
+                  >{{(person.originalId||person.id).slice(16,17)%2?'Mr':'Ms'}}</span
+                >
+                {{py(person.name)}}</span
+              >
+              <span v-html="person.school" class="school personInfo"></span>
+              <span v-html="person.phone" class="phone personInfo"></span>
+              <span v-html="person.id" class="id personInfo"></span>
+              <span v-html="person.order" class="order personInfo"></span>
+            </div>
+            <div v-if="result.length==0" id="nores">
+              <i class="icon">&#xE733;</i>
+              无结果
+            </div>
+          </div>
+          <div id="numpad">
+            <span id="current">{{current}}</span>
+            <div id="numkeys">
+              <button v-for="num in numBtn" class="keys" @click="numkey(num)">
+                {{num}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

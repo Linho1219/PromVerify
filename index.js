@@ -1,0 +1,154 @@
+const express = require("express");
+const expressWs = require("express-ws");
+const fs = require("fs");
+
+const PORT = 6286;
+const app = express();
+expressWs(app);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+let sockets = [];
+
+const newSocketID = (function () {
+  let socketID = 0;
+  return function () {
+    socketID %= 114514;
+    return socketID++;
+  };
+})();
+
+class SocketConnection {
+  constructor(ws, callback) {
+    this.id = newSocketID();
+    console.log(this.id, "已连接");
+    this.ws = ws;
+    if (typeof callback === "function") this.callback = callback;
+    ws.on("close", () => {
+      this.close();
+    });
+    this.aliveStatus = true;
+    this.aliveRetryCount = 0;
+    this.connectionDelay = new Date();
+    this.aliveTimer = setInterval(() => {
+      if (!this.aliveStatus)
+        if (++this.aliveRetryCount <= 3)
+          console.log(this.id, "连接超时，重试次数", this.aliveRetryCount);
+        else {
+          console.log(this.id, "连接超时，已关闭");
+          this.close();
+          return;
+        }
+      this.connectionDelay = new Date();
+      this.send("%HEARTBEAT_CHECK");
+      this.aliveStatus = false;
+    }, 5000);
+    this.ws.on("message", (msg) => {
+      if (msg === "%HEARTBEAT_REPLY") {
+        this.aliveStatus = true;
+        this.send(JSON.stringify({ delay: new Date() - this.connectionDelay }));
+      } else if (typeof this.callback === "function")
+        this.callback(msg, this.id);
+    });
+    this.send("%HEARTBEAT_CHECK");
+  }
+  close() {
+    clearInterval(this.aliveTimer);
+    sockets = sockets.filter((item) => {
+      return item.id !== this.id;
+    });
+  }
+  send(message) {
+    return this.ws.send(message);
+  }
+  listen(callback) {
+    if (typeof callback !== "function") {
+      console.error("回调设置失败", callback);
+      return;
+    }
+    this.callback = callback;
+  }
+}
+
+SocketConnection.sendToAll = (msg, config) => {
+  if (typeof config === "object") {
+    if (Array.isArray(config.to)) {
+      for (let item of sockets)
+        if (config.to.indexOf(item.id) !== -1) item.send(msg);
+    } else if (Array.isArray(config.except))
+      for (let item of sockets)
+        if (config.except.indexOf(item.id) === -1) item.send(msg);
+  } else {
+    for (let item of sockets) item.send(msg);
+  }
+};
+
+function readFile() {
+  return fs.readFileSync("./data.json");
+}
+function writeFile(content) {
+  if (typeof content === "undefined") {
+    console.error("nothing to write");
+    return;
+  }
+  if (typeof content !== "string")
+    fs.writeFileSync("./data.json", JSON.stringify(content));
+  else fs.writeFileSync("./data.json", content);
+}
+
+function updateLocal() {
+  writeFile(JSON.stringify(table));
+}
+let table = [];
+try {
+  table = JSON.parse(readFile());
+} catch {
+  updateLocal();
+}
+console.log("配置载入成功");
+
+app.get("/data", (_req, res) => {
+  res.send(JSON.stringify(table));
+});
+
+app.put("/data", (req, res) => {
+  let data = req.body;
+  console.log(data);
+  res.send("Update received.");
+  if (data.config.cover) {
+    table = data.content;
+    console.log("服务端数据已重置");
+  } else {
+    for (let person of data.content) {
+      for (let original of table)
+        if (person.id === original.id) {
+          original = person;
+          break;
+        }
+      table.push(person);
+    }
+  }
+  SocketConnection.sendToAll("%REFRESH_DATA");
+  updateLocal();
+});
+
+app.ws("/socket", (ws, req) => {
+  sockets.push(
+    new SocketConnection(ws, (msg, id) => {
+      change = JSON.parse(msg);
+      for (let item of table)
+        if (item.id === change.id) {
+          item.in = change.in;
+          break;
+        }
+      SocketConnection.sendToAll(msg, { except: [id] });
+      updateLocal();
+    })
+  );
+});
+
+app.use(express.static("static"));
+
+app.listen(PORT, () => {
+  console.log("服务器启动，端口号", PORT);
+});

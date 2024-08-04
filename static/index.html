@@ -98,7 +98,7 @@
               >
               <span class="pinyin personInfo">
                 <span class="gender"
-                  >{{(person.originalId||person.id).slice(16,17)%2?'Mr':'Ms'}}</span
+                  >{{isNaN((person.originalId||person.id).slice(16,17)%2)?'?':((person.originalId||person.id).slice(16,17)%2?'Mr':'Ms')}}</span
                 >
                 {{py(person.name)}}</span
               >

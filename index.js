@@ -99,12 +99,8 @@ function writeFile(content) {
 function updateLocal() {
   writeFile(JSON.stringify(table));
 }
-let table = [];
-try {
-  table = JSON.parse(readFile());
-} catch {
-  updateLocal();
-}
+
+let table = JSON.parse(readFile());
 console.log("配置载入成功");
 
 app.get("/data", (_req, res) => {
@@ -119,14 +115,15 @@ app.put("/data", (req, res) => {
     table = data.content;
     console.log("服务端数据已重置");
   } else {
-    for (let person of data.content) {
-      for (let original of table)
+    data.content.forEach((person) => {
+      for (let original of table) {
         if (person.id === original.id) {
           original = person;
-          break;
+          return;
         }
+      }
       table.push(person);
-    }
+    });
   }
   SocketConnection.sendToAll("%REFRESH_DATA");
   updateLocal();

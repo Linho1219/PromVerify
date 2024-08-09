@@ -16,31 +16,9 @@ function xhrGet(link) {
   }
 }
 
-let table = JSON.parse(xhrGet(DataLink)).filter((item) => item.in);
-table.push(
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "司徒梓睿", order: "999901" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "林可恩", order: "999904" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" },
-  { name: "刘锦冰", order: "999914" }
-);
-table = table.sort(() => Math.random() - 0.5);
+let table = JSON.parse(xhrGet(DataLink))
+  .filter((item) => item.in)
+  .sort(() => Math.random() - 0.5);
 
 let nameArr = [""],
   numArr = [""];

@@ -1,24 +1,38 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from "vue-router";
+import UniHeader from "./components/Header.vue";
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <UniHeader personInCount="1" personOutCount="1" />
+  <main>
+    <RouterView />
+  </main>
 </template>
+
+<style>
+:root {
+  --green: #29e88b;
+  --red: #ff8f6b;
+  --yellow: #fbc015;
+  --blue: #24adf3;
+  --greenA: #29e88b50;
+  --redA: #ff8f6b50;
+  --yellowA: #fbc01550;
+  --blueA: #24adf350;
+  --greenAA: #29e88b15;
+  --redAA: #ff8f6b15;
+  --yellowAA: #fbc01515;
+  --blueAA: #24adf315;
+}
+main{
+  position:fixed;
+  top:80px;
+  left:0;
+  right:0;
+  bottom:0;
+}
+</style>
 
 <style scoped>
 header {

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import TheWelcome from "../components/TheWelcome.vue";
+import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
+  info!
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
   </nav>
-  <TheWelcome />
 </template>
+
+<style></style>

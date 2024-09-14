@@ -1,4 +1,34 @@
 /* color palette from <https://github.com/vuejs/theme> */
+
+:root {
+  --green: #29e88b;
+  --red: #ff8f6b;
+  --yellow: #fbc015;
+  --blue: #24adf3;
+  --greenA: #29e88b50;
+  --redA: #ff8f6b50;
+  --yellowA: #fbc01550;
+  --blueA: #24adf350;
+  --greenAA: #29e88b15;
+  --redAA: #ff8f6b15;
+  --yellowAA: #fbc01515;
+  --blueAA: #24adf315;
+  color:#fff;
+}
+main {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+*{
+  cursor: default;
+}
+
+
+
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;

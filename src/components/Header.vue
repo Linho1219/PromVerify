@@ -7,7 +7,9 @@ defineProps<{
 
 <template>
   <header id="uniHeader">
-    <h1 id="uniTitle">Prom 2024 验票平台</h1>
+    <h1 id="uniTitle">
+      <slot></slot>
+    </h1>
     <span id="personIn">{{ personInCount }}</span>
     <span id="personOut">{{ personOutCount }}</span>
     <span id="delayTime">{{ 123 }}</span>

@@ -2,17 +2,20 @@
 
 :root {
   --green: #29e88b;
-  --red: #ff8f6b;
+  --orange: #ff8f6b;
   --yellow: #fbc015;
   --blue: #24adf3;
+  --red: #ff3737;
   --greenA: #29e88b50;
-  --redA: #ff8f6b50;
+  --orangeA: #ff8f6b50;
   --yellowA: #fbc01550;
   --blueA: #24adf350;
+  --redA: #ff373750;
   --greenAA: #29e88b15;
-  --redAA: #ff8f6b15;
+  --orangeAA: #ff8f6b15;
   --yellowAA: #fbc01515;
   --blueAA: #24adf315;
+  --redAA: #ff373715;
   color:#fff;
 }
 main {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from "./tiny/FluentIcon.vue";
+import Icon from "./tiny/FluentIcon.vue"
 defineProps<{
   color: string;
   icon: string;
@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <button class="homeBtn" :class="color">
+  <button class="uploadBtn" :class="color">
     <Icon>{{ icon }}</Icon>
     <slot>无标题按钮</slot>
   </button>
@@ -16,29 +16,29 @@ defineProps<{
 <style scoped>
 @import url("../assets/button_color.css");
 
-.homeBtn {
+.uploadBtn {
   display: inline-block;
-  height: 200px;
-  width: 300px;
-  margin: 20px;
-  font-size: 20px;
-  color: white;
+  padding:15px 30px;
+  vertical-align: middle;
+  font-size: 18px;
+  color:white;
   background: var(--bkgColor);
   border: 3px solid var(--bdrColor);
   border-radius: 10px;
 }
-.homeBtn .icon {
-  display: block;
-  margin-bottom: 20px;
-  font-size: 50px;
+
+.uploadBtn .icon {
+  display: inline-block;
+  font-size: 20px;
+  transform: translateY(2px);
 }
 
-.homeBtn:hover {
+.uploadBtn:hover {
   color: var(--btnColor);
   border-color: var(--btnColor);
 }
 
-.homeBtn:hover:active {
+.uploadBtn:hover:active {
   filter: brightness(0.5);
   border-color: var(--bdrColor);
 }

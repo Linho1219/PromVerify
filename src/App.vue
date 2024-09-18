@@ -13,6 +13,22 @@ import UniHeader from "./components/Header.vue";
 </template>
 
 <style scoped>
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+main {
+  position: fixed;
+  top: 80px;
+  bottom: 0;
+}
+
+main > * {
+  animation: fade 0.2s;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import Numpad from "@/components/Numpad.vue";
+import InfoCard from "@/components/InfoCard.vue";
+let value = "------";
 </script>
 
 <template>
-  info!
-  <nav>
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/info">About</RouterLink>
-    <RouterLink to="/import">import</RouterLink>
-  </nav>
+  <div id="infoView">
+    <div id="infoDisplay">
+      <InfoCard :union="true" :isIn="true"></InfoCard>
+    </div>
+    <Numpad></Numpad>
+  </div>
 </template>
 
-<style></style>
+<style scoped>
+#infoView{
+  display:flex
+}
+</style>

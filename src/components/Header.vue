@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon from "./tiny/FluentIcon.vue";
 defineProps<{
   personInCount: string;
   personOutCount: string;
@@ -13,26 +14,31 @@ defineProps<{
     <span id="personIn">{{ personInCount }}</span>
     <span id="personOut">{{ personOutCount }}</span>
     <span id="delayTime">{{ 123 }}</span>
+    <RouterLink to="/">
+      <button class="goHome">
+        <Icon>&#xE80F;</Icon>
+      </button>
+    </RouterLink>
   </header>
 </template>
 
 <style scoped>
-#uniHeader{
-  position:fixed;
-  top:0;
-  right:0;
-  left:0;
-  height:80px;
+#uniHeader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 80px;
   vertical-align: middle;
 }
 
-#uniTitle{
-  height:80px;
-  line-height:80px;
-  display:inline-block;
+#uniTitle {
+  height: 80px;
+  line-height: 80px;
+  display: inline-block;
   padding-left: 30px;
   font-size: 30px;
-  color:white;
+  color: white;
 }
 
 #personIn,
@@ -65,10 +71,32 @@ defineProps<{
 }
 
 #personOut {
-  color: var(--red);
+  color: var(--orange);
 }
 
 #personOut::after {
   content: "缺席";
+}
+
+.goHome {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 40px;
+  line-height: 40px;
+  background:transparent;
+  border:none;
+  font-size:18px;
+  border-radius: 5px;
+}
+
+.goHome:hover{
+  background:#444;
+}
+
+.goHome:active{
+  background:#000;
 }
 </style>

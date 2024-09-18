@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from "./FluentIcon.vue"
+import Icon from "./tiny/FluentIcon.vue"
 defineProps<{
   color: string;
   icon: string;

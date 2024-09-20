@@ -5,7 +5,7 @@ let current = ref("");
 function numkey(key: string) {
   if (key === "C") current.value = "";
   else if (current.value.length < 6) current.value += key;
-  else current.value = key;
+  else current.value = "";
 }
 </script>
 

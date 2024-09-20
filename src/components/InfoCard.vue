@@ -1,37 +1,64 @@
 <script setup lang="ts">
 import Icon from "./tiny/FluentIcon.vue";
-defineProps<{
-  union: boolean;
-  isIn: boolean;
+import type { Person } from "@/views/InfoView.vue";
+import { pinyin } from "pinyin-pro";
+const props = defineProps<{
+  person: Person;
+  unionPerson?: Person;
+  highlight?: string;
 }>();
+const emit = defineEmits<{
+  (event: "toggle", id: string): void;
+}>();
+function handleClick() {
+  emit("toggle", props.person.id);
+}
+function markProp(input: string) {
+  if (typeof props.highlight === "undefined") return input;
+  else return input.replace(props.highlight, `<mark>${props.highlight}</mark>`);
+}
+function getGenderFromId(id: string) {
+  let digit = parseInt(id.charAt(16));
+  if (isNaN(digit)) return "?";
+  else return digit === 1 ? "Mr" : "Ms";
+}
 </script>
 <template>
-  <div class="personDiv">
-    <span class="logo icon">{{ union ? "\uF168" : "\uE136" }}</span>
-    <span class="go" :class="isIn ? 'in' : 'out'"
-      ><i class="icon">&#xE17C;</i></span
-    >
-    <span class="name personInfo">林洪平</span>
-    <span v-if="union" class="unionInfo in">
-      <span class="unionName">张诗涵</span>
+  <div
+    class="personDiv"
+    :class="person.isIn ? 'in' : 'out'"
+    @click="handleClick"
+  >
+    <span class="logo icon">
+      <Icon>{{ person.union ? "\uF168" : "\uE136" }}</Icon>
     </span>
+    <span class="go"><Icon>&#xE17C;</Icon></span>
+    <span class="name personInfo">{{ person.name }}</span>
     <span class="pinyin personInfo">
-      <span class="gender">Mr </span>
-      linhongping</span
+      <span class="gender">{{ getGenderFromId(person.id) }}</span>
+      {{ pinyin(person.name, { surname: "head" }) }}
+    </span>
+    <span class="school personInfo">{{ person.school }}</span>
+    <span class="phone personInfo" v-html="markProp(person.phone)"></span>
+    <span class="id personInfo" v-html="markProp(person.id)"></span>
+    <span class="order personInfo" v-html="markProp(person.order)"></span>
+
+    <span
+      v-if="person.union"
+      class="unionInfo"
+      :class="unionPerson?.isIn ? 'in' : 'out'"
     >
-    <span class="school personInfo">福州一中</span>
-    <span class="phone personInfo">15859103180</span>
-    <span class="id personInfo">350102200512190114</span>
-    <span class="order personInfo">011234</span>
+      <span class="unionName">{{ unionPerson?.name }}</span>
+    </span>
   </div>
 </template>
-<style scoped>
+<style>
 .personDiv {
   margin: 10px;
   padding: 15px 15px 15px 60px;
   position: relative;
   flex-grow: 1;
-	min-width: 150px;
+  min-width: 150px;
 
   border-radius: 10px;
   background: #1f1f1f;
@@ -45,7 +72,7 @@ defineProps<{
 }
 
 .personDiv.out {
-  border-color: var(--redA);
+  border-color: var(--orangeA);
 }
 
 .personDiv .logo {
@@ -53,6 +80,7 @@ defineProps<{
   left: 15px;
 
   font-size: 30px;
+  color: white;
 }
 
 .personDiv .go {
@@ -63,15 +91,16 @@ defineProps<{
   width: 30px;
 
   font-size: 20px;
+  text-align: center;
   transition: color 0.15s;
 }
 
-.personDiv .go.in i {
+.personDiv.in .go i {
   color: var(--green);
 }
 
-.personDiv .go.out i {
-  color: var(--red);
+.personDiv.out .go i {
+  color: var(--orange);
 }
 
 .personDiv .go::before,
@@ -96,12 +125,12 @@ defineProps<{
 
 .personDiv .go::after {
   width: 2px;
-  background: var(--red);
+  background: var(--orange);
   border-radius: 2px;
 }
 
-.personDiv .go.in::before,
-.personDiv .go.in::after {
+.personDiv.in .go::before,
+.personDiv.in .go::after {
   background: transparent;
 }
 
@@ -110,6 +139,7 @@ defineProps<{
   text-align: left;
   color: #fffa;
   font-size: 16px;
+  line-height: 20px;
 }
 
 .personInfo.name {
@@ -145,7 +175,7 @@ defineProps<{
 }
 
 .personDiv .unionInfo.out::before {
-  color: var(--red);
+  color: var(--orange);
 }
 
 .personDiv .unionInfo.in::before {
@@ -166,7 +196,7 @@ defineProps<{
   color:#fffa
 } */
 
-.personInfo mark {
+mark {
   padding: 0 1px;
   margin: 0 -1px;
   background: #ff05;

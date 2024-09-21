@@ -28,4 +28,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-data.json
+
+# User data
+data

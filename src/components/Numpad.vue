@@ -2,10 +2,14 @@
 import { ref } from "vue";
 const numBtn = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0", "X"];
 let current = ref("");
+const emit = defineEmits<{
+  (event: "search", id: string): void;
+}>();
 function numkey(key: string) {
   if (key === "C") current.value = "";
   else if (current.value.length < 6) current.value += key;
   else current.value = "";
+  emit("search", current.value);
 }
 </script>
 
@@ -59,6 +63,7 @@ function numkey(key: string) {
 
   border-radius: 10px;
   background: #333;
+  color: white;
   font-size: 25px;
   border: none;
 }

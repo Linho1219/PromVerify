@@ -88,6 +88,7 @@ function readFile() {
   return fs.readFileSync("./data/data.json");
 }
 function writeFile(content) {
+  console.log("write");
   if (typeof content === "undefined") {
     console.error("nothing to write");
     return;
@@ -130,15 +131,12 @@ app.put("/data", (req, res) => {
   updateLocal();
 });
 
-app.ws("/socket", (ws, req) => {
+app.ws("/socket", (ws, _req) => {
   sockets.push(
     new SocketConnection(ws, (msg, id) => {
-      change = JSON.parse(msg);
-      for (let item of table)
-        if (item.id === change.id) {
-          item.in = change.in;
-          break;
-        }
+      let change = JSON.parse(msg);
+      console.log(change)
+      table.filter((item) => item.id === change.id)[0].isIn = change.isIn;
       SocketConnection.sendToAll(msg, { except: [id] });
       updateLocal();
     })

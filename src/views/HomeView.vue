@@ -17,8 +17,10 @@ import HomeButton from "../components/HomeButton.vue";
 </template>
 
 <style>
-.homeBtns{
-  display:flex;justify-content: center; align-items:center;
-  height:60%;
+.homeBtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60%;
 }
 </style>

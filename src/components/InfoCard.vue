@@ -8,13 +8,15 @@ const props = defineProps<{
   highlight?: string;
 }>();
 const emit = defineEmits<{
-  (event: "toggle", id: string): void;
+  (event: "toggleIn", id: string): void;
 }>();
 function handleClick() {
-  emit("toggle", props.person.id);
+  console.log('emit')
+  emit("toggleIn", props.person.id);
 }
 function markProp(input: string) {
-  if (typeof props.highlight === "undefined") return input;
+  if (typeof props.highlight === "undefined" || props.highlight === "")
+    return input;
   else return input.replace(props.highlight, `<mark>${props.highlight}</mark>`);
 }
 function getGenderFromId(id: string) {

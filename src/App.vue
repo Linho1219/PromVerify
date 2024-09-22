@@ -5,7 +5,7 @@ import UniHeader from "./components/Header.vue";
 
 <template>
   <UniHeader personInCount="1" personOutCount="1">
-    Prom2024 验票平台
+    Prom 2024 验票平台
   </UniHeader>
   <main>
     <RouterView />

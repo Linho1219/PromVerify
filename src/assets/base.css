@@ -29,6 +29,7 @@ main {
 *{
   cursor: default;
   color:white;
+  user-select: none;
 }
 
 

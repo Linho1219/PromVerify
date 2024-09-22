@@ -2,6 +2,7 @@
 import Icon from "./tiny/FluentIcon.vue";
 import type { Person } from "@/views/InfoView.vue";
 import { pinyin } from "pinyin-pro";
+import _ from "lodash";
 const props = defineProps<{
   person: Person;
   unionPerson?: Person;
@@ -9,10 +10,16 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
   (event: "toggleIn", id: string): void;
+  (event: "getOrder", order: string): void;
 }>();
+const toogle = _.throttle((id: string) => emit("toggleIn", id), 500);
 function handleClick() {
-  console.log('emit')
-  emit("toggleIn", props.person.id);
+  console.log("emit");
+  toogle(props.person.id);
+}
+function handleUnionClick() {
+  console.log("emit");
+  toogle(props.unionPerson!.id);
 }
 function markProp(input: string) {
   if (typeof props.highlight === "undefined" || props.highlight === "")
@@ -24,6 +31,9 @@ function getGenderFromId(id: string) {
   if (isNaN(digit)) return "?";
   else return digit === 1 ? "Mr" : "Ms";
 }
+function handleOrderClick() {
+  if (props.person.union) emit("getOrder", props.person.order);
+}
 </script>
 <template>
   <div
@@ -31,7 +41,7 @@ function getGenderFromId(id: string) {
     :class="person.isIn ? 'in' : 'out'"
     @click="handleClick"
   >
-    <span class="logo icon">
+    <span class="logo icon" @click.stop="handleOrderClick">
       <Icon>{{ person.union ? "\uF168" : "\uE136" }}</Icon>
     </span>
     <span class="go"><Icon>&#xE17C;</Icon></span>
@@ -49,6 +59,7 @@ function getGenderFromId(id: string) {
       v-if="person.union"
       class="unionInfo"
       :class="unionPerson?.isIn ? 'in' : 'out'"
+      @click.stop="handleUnionClick"
     >
       <span class="unionName">{{ unionPerson?.name }}</span>
     </span>

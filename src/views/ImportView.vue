@@ -1,13 +1,15 @@
 <template>
   <textarea v-model.trim="rawText" id="uploadTextbox"></textarea>
   <div class="uploadBtns">
-    <UploadButton @click="uploadConfirm(false)" color="green" icon="&#xF78C;"> 追加配置 </UploadButton>
-    <UploadButton @click="uploadConfirm(true)" color="yellow" icon="&#xE822;"> 覆盖配置 </UploadButton>
-    <RouterLink to="/"
-      ><UploadButton color="red" icon="&#xF78A;">
-        退出编辑
-      </UploadButton></RouterLink
-    >
+    <UploadButton @click="uploadConfirm(false)" color="green" icon="&#xF78C;">
+      追加配置
+    </UploadButton>
+    <UploadButton @click="uploadConfirm(true)" color="yellow" icon="&#xE822;">
+      覆盖配置
+    </UploadButton>
+    <RouterLink to="/">
+      <UploadButton color="red" icon="&#xF78A;"> 退出编辑 </UploadButton>
+    </RouterLink>
   </div>
 </template>
 
@@ -24,17 +26,17 @@ const HREF = window.location.href.match(
 )![1];
 const DataLink = `//${HREF}/data`;
 
-const PersonAttrNames = [
-  "name",
-  "id",
-  "phone",
-  "school",
-  "union",
-  "isIn",
-  "unionName",
-  "unionId",
-  "order",
-];
+// const PersonAttrNames = [
+//   "name",
+//   "id",
+//   "phone",
+//   "school",
+//   "union",
+//   "isIn",
+//   "unionName",
+//   "unionId",
+//   "order",
+// ];
 
 function xhrGet(link: string) {
   let xhr = new XMLHttpRequest();

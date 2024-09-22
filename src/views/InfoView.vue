@@ -14,52 +14,10 @@ export interface Person {
   order: string; //单号
 }
 
-let array: Array<Person> = [
-  {
-    name: "林洪平",
-    id: "350102200512190114",
-    phone: "15859103180",
-    school: "福州一中",
-    union: true,
-    isIn: true,
-    unionId: "350102200566666666",
-    order: "123456",
-  },
-  {
-    name: "夏展鸿",
-    id: "350102200566666666",
-    phone: "15659103180",
-    school: "福州一中",
-    union: true,
-    isIn: false,
-    unionId: "350102200512190114",
-    order: "123456",
-  },
-  {
-    name: "张三",
-    id: "666666666666666666",
-    phone: "13600952018",
-    school: "福州一中",
-    union: false,
-    isIn: false,
-    order: "666666",
-  },
-];
-
 function xhrGet(link: string): string {
   let xhr = new XMLHttpRequest();
   xhr.open("GET", link, false);
   xhr.send(null);
-  if (xhr.status === 200) return xhr.responseText;
-  else {
-    throw xhr.status;
-  }
-}
-function xhrPut(link: string, content: string): string {
-  let xhr = new XMLHttpRequest();
-  xhr.open("PUT", link, false);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(content);
   if (xhr.status === 200) return xhr.responseText;
   else {
     throw xhr.status;
@@ -76,11 +34,14 @@ let ws: WebSocket;
 const HREF = window.location.href.match(/^https?:\/\/(.+)\/(index\.html)?/)![1];
 const DataLink = `//${HREF}/data`;
 let table = ref<Array<Person>>(JSON.parse(xhrGet(DataLink)));
-const displayTable = computed(() => {
-  return table.value.filter((person)=>{
-    
-  });
-});
+const displayTable = computed(() =>
+  table.value.filter(
+    (person) =>
+      person.id.match(current.value) !== null ||
+      person.phone.match(current.value) !== null ||
+      person.order.match(current.value) !== null
+  )
+);
 
 function setUpWs() {
   ws = new WebSocket(`ws://${HREF}/socket`);
@@ -148,7 +109,7 @@ function handleSearch(key: string) {
         v-for="item of displayTable"
         :person="item"
         :unionPerson="getUnion(item)"
-        highlight="current"
+        :highlight="current"
         @toggleIn="handleToggle"
       ></Card>
     </div>

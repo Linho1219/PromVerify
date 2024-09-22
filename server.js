@@ -135,7 +135,7 @@ app.ws("/socket", (ws, _req) => {
   sockets.push(
     new SocketConnection(ws, (msg, id) => {
       let change = JSON.parse(msg);
-      console.log(change)
+      console.log(change);
       table.filter((item) => item.id === change.id)[0].isIn = change.isIn;
       SocketConnection.sendToAll(msg, { except: [id] });
       updateLocal();
@@ -145,4 +145,4 @@ app.ws("/socket", (ws, _req) => {
 
 // ViteExpress.config({ mode: "production" })
 
-ViteExpress.listen(app, 3000, () => console.log("Server is listening..."));
+ViteExpress.listen(app, PORT, () => console.log("服务器启动，端口", PORT));

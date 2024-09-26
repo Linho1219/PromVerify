@@ -5,6 +5,7 @@ import fs from "fs";
 
 const PORT = 6286;
 const app = express();
+const DATA_PATH = "./data/data.json";
 expressWs(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -84,11 +85,9 @@ SocketConnection.sendToAll = (msg, config) => {
   }
 };
 
-function readFile() {
-  return fs.readFileSync("./data/data.json");
-}
+const readFile = () => fs.readFileSync(DATA_PATH, { encoding: "utf-8" });
 function writeFile(content) {
-  console.log("write");
+  // console.log("write");
   if (typeof content === "undefined") {
     console.error("nothing to write");
     return;
@@ -102,7 +101,14 @@ function updateLocal() {
   writeFile(JSON.stringify(table));
 }
 
-let table = JSON.parse(readFile());
+let table = [];
+try {
+  table = JSON.parse(readFile());
+  console.log("配置载入成功");
+} catch {
+  updateLocal();
+  console.log("未找到配置文件，已新建");
+}
 console.log("配置载入成功");
 
 app.get("/data", (_req, res) => {

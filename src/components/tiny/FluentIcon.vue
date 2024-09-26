@@ -4,7 +4,7 @@
 <style scoped>
 @font-face {
   font-family: SegoeIcons;
-  src: url("@/../public/SegoeIcons.ttf");
+  src: url("/SegoeIcons.ttf");
 }
 .icon {
   font-family: SegoeIcons !important;

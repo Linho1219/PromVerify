@@ -3,6 +3,7 @@ import Icon from "./tiny/FluentIcon.vue";
 import type { Person } from "@/views/InfoView.vue";
 import { pinyin } from "pinyin-pro";
 import _ from "lodash";
+import emitter from "../mitt";
 const props = defineProps<{
   person: Person;
   unionPerson?: Person;
@@ -27,12 +28,12 @@ function markProp(input: string) {
   else return input.replace(props.highlight, `<mark>${props.highlight}</mark>`);
 }
 function getGenderFromId(id: string) {
-  let digit = parseInt(id.charAt(16));
+  let digit = Number(id.charAt(16));
   if (isNaN(digit)) return "?";
-  else return digit === 1 ? "Mr" : "Ms";
+  else return digit % 2 === 1 ? "Mr" : "Ms";
 }
 function handleOrderClick() {
-  if (props.person.union) emit("getOrder", props.person.order);
+  if (props.person.union) emitter.emit("on-search-order", props.person.order);
 }
 </script>
 <template>

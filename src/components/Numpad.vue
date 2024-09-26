@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import emitter from "../mitt";
 const numBtn = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0", "X"];
 let current = ref("");
+
 const emit = defineEmits<{
   (event: "search", id: string): void;
 }>();
@@ -11,6 +13,19 @@ function numkey(key: string) {
   else current.value = "";
   emit("search", current.value);
 }
+const handleOrderSearch = (order: string) => {
+  current.value = order;
+  emit("search", order);
+};
+
+onMounted(() => {
+  emitter.on("on-search-order", handleOrderSearch);
+});
+
+// 移除
+onUnmounted(() => {
+  emitter.off("on-search-order", handleOrderSearch);
+});
 </script>
 
 <template>

@@ -69,7 +69,7 @@ onUnmounted(() => {
   padding: 0 10px;
 }
 
-.keys {
+#numkeys .keys {
   height: 80px;
   width: 80px;
   margin: 10px;
@@ -80,5 +80,9 @@ onUnmounted(() => {
   color: white;
   font-size: 25px;
   border: none;
+}
+
+#numkeys .keys:active{
+  background:#222
 }
 </style>

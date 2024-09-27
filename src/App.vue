@@ -4,21 +4,13 @@ import UniHeader from "./components/Header.vue";
 </script>
 
 <template>
-  <UniHeader personInCount="1" personOutCount="1">
-    Prom 2024 验票平台
-  </UniHeader>
+  <UniHeader> Prom 2024 验票平台 </UniHeader>
   <main>
     <RouterView />
   </main>
 </template>
 
 <style scoped>
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-}
-
 main {
   position: fixed;
   top: 80px;

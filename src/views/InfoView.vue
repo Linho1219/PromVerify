@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import Numpad from "@/components/Numpad.vue";
 import Card from "@/components/InfoCard.vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import _ from "lodash";
+import emitter from "../mitt";
+
+onMounted(() => {
+  emitter.emit("on-toogle-info", true);
+});
+onUnmounted(() => {
+  emitter.emit("on-toogle-info", false);
+});
+
 export interface Person {
   name: string; //姓名
   id: string; //身份证号-主值
@@ -14,32 +23,37 @@ export interface Person {
   order: string; //单号
 }
 
-function xhrGet(link: string): string {
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", link, false);
-  xhr.send(null);
-  if (xhr.status === 200) return xhr.responseText;
-  else {
-    throw xhr.status;
-  }
-}
-
 let current = ref(""),
-  delay = ref(999),
   connectionCheck = false,
   connectionRetry = 0,
-  connectionLost = ref(false);
+  connectionLost = false,
+  heartbeatTimer: number;
 
 let ws: WebSocket;
 const HREF = window.location.href.match(/^https?:\/\/(.+)\/(index\.html)?/)![1];
 const DataLink = `//${HREF}/data`;
-let table = ref<Array<Person>>(JSON.parse(xhrGet(DataLink)));
+
+const getRemoteData = () => {
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", DataLink, false);
+  xhr.send(null);
+  if (xhr.status === 200) return JSON.parse(xhr.responseText);
+  else {
+    throw xhr.status;
+  }
+};
+let table = ref<Array<Person>>(getRemoteData());
+
+emitter.emit("on-refresh-counter", {
+  inCount: table.value.filter((person) => person.isIn).length,
+  outCount: table.value.filter((person) => !person.isIn).length,
+});
 const displayTable = computed(() =>
   table.value.filter(
-    (person) =>
-      person.id.match(current.value) !== null ||
-      person.phone.match(current.value) !== null ||
-      person.order.match(current.value) !== null
+    ({ id, phone, order }) =>
+      id.match(current.value) !== null ||
+      phone.match(current.value) !== null ||
+      order.match(current.value) !== null
   )
 );
 
@@ -50,32 +64,60 @@ function setUpWs() {
     let msg = e.data;
     console.log("收到服务器响应", msg);
     if (msg === "%HEARTBEAT_CHECK") ws.send("%HEARTBEAT_REPLY");
-    else if (msg === "%REFRESH_DATA") refreshData();
+    else if (msg === "%REFRESH_DATA") table.value = getRemoteData();
     else {
       msg = JSON.parse(msg);
-      if (typeof msg.delay === "number") delay.value = msg.delay % 999;
-      else {
+      if (typeof msg.delay === "number") {
+        emitter.emit("on-refresh-delay", msg.delay % 999);
+      } else {
         getPersonById(msg.id).isIn = msg.isIn;
-        // this.search();
       }
     }
     connectionCheck = true;
     connectionRetry = 0;
   };
+
+  if (typeof heartbeatTimer === "undefined")
+    heartbeatTimer = setTimeout(() => {
+      console.log("心跳计时器启动");
+      setInterval(() => {
+        if (!connectionLost) {
+          if (!connectionCheck) {
+            if (++connectionRetry <= 1) {
+              emitter.emit("on-refresh-delay", 999);
+              console.log("服务器连接丢失，重试次数", connectionRetry);
+            } else {
+              connectionLost = true;
+              connectionRetry = 0;
+              console.log(
+                "服务器连接丢失，尝试重新建立连接，重试次数",
+                connectionRetry++
+              );
+              emitter.emit("on-refresh-delay", -1);
+              setUpWs();
+            }
+          }
+          connectionCheck = false;
+        } else {
+          console.log(
+            "服务器连接丢失，尝试重新建立连接，重试次数",
+            connectionRetry++
+          );
+          setUpWs();
+        }
+      }, 5000);
+    }, 2500);
+
   ws.onopen = () => {
     if (connectionLost) {
-      connectionLost.value = false;
-      refreshData();
+      connectionLost = false;
+      table.value = getRemoteData();
     }
     connectionCheck = true;
     connectionRetry = 0;
   };
 }
 setUpWs();
-function refreshData() {
-  table.value = JSON.parse(xhrGet(DataLink));
-  // this.search();
-}
 
 const getUnion = (person: Person) =>
   person.union === false
@@ -95,6 +137,10 @@ function handleToggle(id: string) {
       isIn: person.isIn,
     })
   );
+  emitter.emit("on-refresh-counter", {
+    inCount: table.value.filter((person) => person.isIn).length,
+    outCount: table.value.filter((person) => !person.isIn).length,
+  });
   console.log("toggle:", person.id, person.isIn);
 }
 function handleSearch(key: string) {

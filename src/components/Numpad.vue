@@ -22,7 +22,6 @@ onMounted(() => {
   emitter.on("on-search-order", handleOrderSearch);
 });
 
-// 移除
 onUnmounted(() => {
   emitter.off("on-search-order", handleOrderSearch);
 });

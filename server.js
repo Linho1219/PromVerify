@@ -1,9 +1,11 @@
-const express = require("express");
-const expressWs = require("express-ws");
-const fs = require("fs");
+import express from "express";
+import expressWs from "express-ws";
+import ViteExpress from "vite-express";
+import fs from "fs";
 
 const PORT = 6286;
 const app = express();
+const DATA_PATH = "./data/data.json";
 expressWs(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -83,25 +85,20 @@ SocketConnection.sendToAll = (msg, config) => {
   }
 };
 
-function readFile() {
-  return fs.readFileSync("./data.json");
-}
-function writeFile(content) {
-  if (typeof content === "undefined") {
-    console.error("nothing to write");
-    return;
-  }
-  if (typeof content !== "string")
-    fs.writeFileSync("./data.json", JSON.stringify(content));
-  else fs.writeFileSync("./data.json", content);
-}
+let table = [];
 
-function updateLocal() {
-  writeFile(JSON.stringify(table));
-}
+const readFile = () => fs.readFileSync(DATA_PATH, { encoding: "utf-8" });
+const updateLocal = () => {
+  fs.writeFileSync(DATA_PATH, JSON.stringify(table))
+};
 
-let table = JSON.parse(readFile());
-console.log("配置载入成功");
+try {
+  table = JSON.parse(readFile());
+  console.log("配置载入成功");
+} catch {
+  updateLocal();
+  console.log("未找到配置文件，已新建");
+}
 
 app.get("/data", (_req, res) => {
   res.send(JSON.stringify(table));
@@ -129,23 +126,16 @@ app.put("/data", (req, res) => {
   updateLocal();
 });
 
-app.ws("/socket", (ws, req) => {
+app.ws("/socket", (ws, _req) => {
   sockets.push(
     new SocketConnection(ws, (msg, id) => {
-      change = JSON.parse(msg);
-      for (let item of table)
-        if (item.id === change.id) {
-          item.in = change.in;
-          break;
-        }
+      let change = JSON.parse(msg);
+      console.log(change);
+      table.filter((item) => item.id === change.id)[0].isIn = change.isIn;
       SocketConnection.sendToAll(msg, { except: [id] });
       updateLocal();
     })
   );
 });
 
-app.use(express.static("static"));
-
-app.listen(PORT, () => {
-  console.log("服务器启动，端口号", PORT);
-});
+ViteExpress.listen(app, PORT, () => console.log("服务器启动，端口", PORT));

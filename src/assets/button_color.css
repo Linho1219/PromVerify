@@ -1,0 +1,29 @@
+.green {
+  --btnColor: var(--green);
+  --bdrColor: var(--greenA);
+  --bkgColor: var(--greenAA);
+}
+
+.blue {
+  --btnColor: var(--blue);
+  --bdrColor: var(--blueA);
+  --bkgColor: var(--blueAA);
+}
+
+.yellow {
+  --btnColor: var(--yellow);
+  --bdrColor: var(--yellowA);
+  --bkgColor: var(--yellowAA);
+}
+
+.orange {
+  --btnColor: var(--orange);
+  --bdrColor: var(--orangeA);
+  --bkgColor: var(--orangeAA);
+}
+
+.red {
+  --btnColor: var(--red);
+  --bdrColor: var(--redA);
+  --bkgColor: var(--redAA);
+}

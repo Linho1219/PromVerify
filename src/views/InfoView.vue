@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Numpad from "@/components/Numpad.vue";
 import Card from "@/components/InfoCard.vue";
+import Icon from "../components/tiny/FluentIcon.vue"
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import _ from "lodash";
 import emitter from "../mitt";
@@ -158,6 +159,10 @@ function handleSearch(key: string) {
         :highlight="current"
         @toggleIn="handleToggle"
       ></Card>
+      <div v-if="displayTable.length == 0" id="nores">
+        <Icon>&#xF133;</Icon>
+        无结果
+      </div>
     </div>
     <Numpad @search="handleSearch"></Numpad>
   </div>
@@ -176,5 +181,18 @@ function handleSearch(key: string) {
   justify-content: center;
   align-content: flex-start;
   overflow: scroll;
+}
+#nores {
+  color: #fff8;
+  font-size: 25px;
+  margin-top: 100px;
+  width: 120px;
+  text-align: center;
+}
+
+#nores .icon {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 60px;
 }
 </style>

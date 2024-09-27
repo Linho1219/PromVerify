@@ -85,23 +85,13 @@ SocketConnection.sendToAll = (msg, config) => {
   }
 };
 
-const readFile = () => fs.readFileSync(DATA_PATH, { encoding: "utf-8" });
-function writeFile(content) {
-  // console.log("write");
-  if (typeof content === "undefined") {
-    console.error("nothing to write");
-    return;
-  }
-  if (typeof content !== "string")
-    fs.writeFileSync("./data/data.json", JSON.stringify(content));
-  else fs.writeFileSync("./data/data.json", content);
-}
-
-function updateLocal() {
-  writeFile(JSON.stringify(table));
-}
-
 let table = [];
+
+const readFile = () => fs.readFileSync(DATA_PATH, { encoding: "utf-8" });
+const updateLocal = () => {
+  fs.writeFileSync(DATA_PATH, JSON.stringify(table))
+};
+
 try {
   table = JSON.parse(readFile());
   console.log("配置载入成功");
@@ -109,7 +99,6 @@ try {
   updateLocal();
   console.log("未找到配置文件，已新建");
 }
-console.log("配置载入成功");
 
 app.get("/data", (_req, res) => {
   res.send(JSON.stringify(table));
@@ -148,7 +137,5 @@ app.ws("/socket", (ws, _req) => {
     })
   );
 });
-
-// ViteExpress.config({ mode: "production" })
 
 ViteExpress.listen(app, PORT, () => console.log("服务器启动，端口", PORT));

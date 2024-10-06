@@ -40,20 +40,18 @@ class SocketConnection {
   aliveStatus: boolean;
   aliveRetryCount: number;
   connectionDelay: Date;
-  private readonly aliveTimer: number;
+  private readonly aliveTimer: NodeJS.Timeout;
   private callback?: Function;
-
   constructor(ws: WebSocket, callback?: Function) {
     this.id = newSocketID();
     console.log(this.id, "已连接");
     this.ws = ws;
-    this.send("%HEARTBEAT_CHECK");
     if (typeof callback === "function") this.callback = callback;
-    ws.addEventListener("close", () => this.close());
+    ws.on("close", () => this.close());
     this.aliveStatus = true;
     this.aliveRetryCount = 0;
     this.connectionDelay = new Date();
-    this.aliveTimer = window.setInterval(() => {
+    this.aliveTimer = setInterval(() => {
       if (!this.aliveStatus)
         if (++this.aliveRetryCount <= 3)
           console.log(this.id, "连接超时，重试次数", this.aliveRetryCount);
@@ -66,8 +64,7 @@ class SocketConnection {
       this.send("%HEARTBEAT_CHECK");
       this.aliveStatus = false;
     }, 5000);
-    ws.on("message", (msg: string) => {
-      console.log("msg", msg);
+    this.ws.on("message", (msg: string) => {
       if (msg === "%HEARTBEAT_REPLY") {
         this.aliveStatus = true;
         this.send(
@@ -78,7 +75,7 @@ class SocketConnection {
       } else if (typeof this.callback === "function")
         this.callback(msg, this.id);
     });
-    
+    this.send("%HEARTBEAT_CHECK");
   }
   close() {
     clearInterval(this.aliveTimer);
@@ -87,18 +84,7 @@ class SocketConnection {
     });
   }
   send(message: string) {
-    console.log("attempted to send", message);
-    if (this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(message, (error) => {
-        if (error) {
-          console.error("Error sending message:", error);
-        } else {
-          console.log("Message sent successfully:", message);
-        }
-      });
-    } else {
-      console.error("WebSocket is not open. ReadyState:", this.ws.readyState);
-    }
+    return this.ws.send(message);
   }
   listen(callback: Function) {
     if (typeof callback !== "function") console.error("回调设置失败", callback);
@@ -185,4 +171,3 @@ app.ws("/socket", (ws: WebSocket) => {
 ViteExpress.listen(expressServer, PORT, () =>
   console.log("服务器启动，端口", PORT)
 );
-

@@ -6,7 +6,7 @@
 
 这是为福州 Prom2024 毕业舞会写的简单验票工具，基于 Node.js。包含前端和后端。
 
-现在已经过重构（也当是进一步学习 Vite 和 TS）。前端使用 Vue3 + Vite + TypeScript 编写，使用 vite-express 进行前后端联调。后端是普通的 JavaScript，express 框架。
+现在已经过重构（也当是进一步学习 Vite 和 TS）。前端使用 Vue3 + Vite + TypeScript 编写，使用 vite-express 进行前后端联调。后端也是 TypeScript，用了 express 框架。
 
 服务端代码在根目录下的 `server.js` 里面。前端基本上是 Vite 的标准结构。
 
@@ -19,6 +19,8 @@
 `npm run build` 构建生产环境的前端，位于 dist 目录；
 
 `npm run prod` 启动生产环境服务器（需要先构建）。
+
+另外，build 和 prod 都是用 esno 跑的，不做类型检查。
 
 ## 食用
 

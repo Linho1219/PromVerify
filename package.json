@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "esno server.ts",
     "dev:vite": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "prod": "cross-env NODE_ENV=production node server.js",
+    "prod": "cross-env NODE_ENV=production esno server.ts",
     "preview:vite": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force"

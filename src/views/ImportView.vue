@@ -84,13 +84,13 @@ function excel2Obj(input: string) {
       PHONE2 = items.indexOf("舞伴手机号码");
       SCHOOL2 = items.indexOf("舞伴毕业学校");
       ORDER = items.indexOf("随机码");
-      console.log("表头读取成功");
+      // console.log("表头读取成功");
       continue;
     } else if (NAME === -1) continue;
 
     if (items[0].match("由麦客CRM提供技术支持") !== null) break;
 
-    console.log("录入记录");
+    // console.log("录入记录");
     if (items[UNION] === "购买单人票") {
       output.push({
         name: noBrackets(items[NAME]),
@@ -131,7 +131,7 @@ function excel2Obj(input: string) {
       });
     }
   }
-  console.log(output);
+  // console.log(output);
   return output;
 }
 

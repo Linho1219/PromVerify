@@ -44,7 +44,7 @@ class SocketConnection {
   private callback?: Function;
   constructor(ws: WebSocket, callback?: Function) {
     this.id = newSocketID();
-    console.log(this.id, "已连接");
+    // console.log(this.id, "已连接");
     this.ws = ws;
     if (typeof callback === "function") this.callback = callback;
     ws.on("close", () => this.close());
@@ -53,10 +53,10 @@ class SocketConnection {
     this.connectionDelay = new Date();
     this.aliveTimer = setInterval(() => {
       if (!this.aliveStatus)
-        if (++this.aliveRetryCount <= 3)
-          console.log(this.id, "连接超时，重试次数", this.aliveRetryCount);
-        else {
-          console.log(this.id, "连接超时，已关闭");
+        if (++this.aliveRetryCount <= 3) {
+          // console.log(this.id, "连接超时，重试次数", this.aliveRetryCount);
+        } else {
+          // console.log(this.id, "连接超时，已关闭");
           this.close();
           return;
         }
@@ -136,7 +136,7 @@ app.get("/data", (_req: any, res: any) => {
 
 app.put("/data", (req: any, res: any) => {
   let data = req.body;
-  console.log(data);
+  // console.log(data);
   res.send("Update received.");
   if (data.config.cover) {
     table = data.content;
@@ -160,7 +160,7 @@ app.ws("/socket", (ws: WebSocket) => {
   sockets.push(
     new SocketConnection(ws, (msg: string, id: number) => {
       let change = JSON.parse(msg);
-      console.log(change);
+      // console.log(change);
       table.filter(({ id }) => id === change.id)[0].isIn = change.isIn;
       SocketConnection.sendToAll(msg, { except: [id] });
       updateLocal();

@@ -63,7 +63,7 @@ function setUpWs() {
 
   ws.onmessage = (e) => {
     let msg = e.data;
-    console.log("收到服务器响应", msg);
+    // console.log("收到服务器响应", msg);
     if (msg === "%HEARTBEAT_CHECK") ws.send("%HEARTBEAT_REPLY");
     else if (msg === "%REFRESH_DATA") table.value = getRemoteData();
     else {
@@ -80,30 +80,30 @@ function setUpWs() {
 
   if (typeof heartbeatTimer === "undefined")
     heartbeatTimer = setTimeout(() => {
-      console.log("心跳计时器启动");
+      // console.log("心跳计时器启动");
       setInterval(() => {
         if (!connectionLost) {
           if (!connectionCheck) {
             if (++connectionRetry <= 1) {
               emitter.emit("on-refresh-delay", 999);
-              console.log("服务器连接丢失，重试次数", connectionRetry);
+              // console.log("服务器连接丢失，重试次数", connectionRetry);
             } else {
               connectionLost = true;
               connectionRetry = 0;
-              console.log(
-                "服务器连接丢失，尝试重新建立连接，重试次数",
-                connectionRetry++
-              );
+              // console.log(
+              //   "服务器连接丢失，尝试重新建立连接，重试次数",
+              //   connectionRetry++
+              // );
               emitter.emit("on-refresh-delay", -1);
               setUpWs();
             }
           }
           connectionCheck = false;
         } else {
-          console.log(
-            "服务器连接丢失，尝试重新建立连接，重试次数",
-            connectionRetry++
-          );
+          // console.log(
+          //   "服务器连接丢失，尝试重新建立连接，重试次数",
+          //   connectionRetry++
+          // );
           setUpWs();
         }
       }, 5000);
@@ -142,7 +142,7 @@ function handleToggle(id: string) {
     inCount: table.value.filter((person) => person.isIn).length,
     outCount: table.value.filter((person) => !person.isIn).length,
   });
-  console.log("toggle:", person.id, person.isIn);
+  // console.log("toggle:", person.id, person.isIn);
 }
 function handleSearch(key: string) {
   current.value = key;

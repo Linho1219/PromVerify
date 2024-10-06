@@ -15,11 +15,11 @@ const emit = defineEmits<{
 }>();
 const toogle = _.throttle((id: string) => emit("toggleIn", id), 500);
 function handleClick() {
-  console.log("emit");
+  // console.log("emit");
   toogle(props.person.id);
 }
 function handleUnionClick() {
-  console.log("emit");
+  // console.log("emit");
   toogle(props.unionPerson!.id);
 }
 function markProp(input: string) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Numpad from "@/components/Numpad.vue";
 import Card from "@/components/InfoCard.vue";
-import Icon from "../components/tiny/FluentIcon.vue"
+import Icon from "../components/tiny/FluentIcon.vue";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import _ from "lodash";
 import emitter from "../mitt";
@@ -59,7 +59,11 @@ const displayTable = computed(() =>
 );
 
 function setUpWs() {
-  ws = new WebSocket(`ws://${HREF}/socket`);
+  ws = new WebSocket(
+    `ws${
+      window.location.href.match(/https:/) === null ? "" : "s"
+    }://${HREF}/socket`
+  );
 
   ws.onmessage = (e) => {
     let msg = e.data;

@@ -1,4 +1,6 @@
 # PromVerify
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLinho1219%2FPromVerify.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FLinho1219%2FPromVerify?ref=badge_shield)
+
 
 ## 芝士甚么
 
@@ -74,3 +76,7 @@
 > Prom，即毕业舞会，为一种正式的舞会形式，一般在高中毕业期间举办，男女皆着盛装出席，是高中学业结束，迈向社会或大学的一场盛大的仪式。2017 年，福州一中 2017 届校友卓迅先生牵头策划了第一届舞会，代代传承至今。
 >
 > Prom2024，已经是福州一中毕业生举办 Prom 的第八个年头， **首次无限制面向全福州市高三毕业生及往届学长学姐开放。** 欢迎各校的朋友们参与！
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLinho1219%2FPromVerify.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLinho1219%2FPromVerify?ref=badge_large)

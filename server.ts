@@ -95,13 +95,13 @@ class SocketConnection {
     config?: { to?: Array<number>; except?: Array<number> }
   ): void {
     if (typeof config === "object")
-      if (Array.isArray(config.to))
+      if (config.to)
         sockets
           .filter((item) => config.to!.includes(item.id))
           .forEach((item) => item.send(msg));
-      else if (Array.isArray(config.except))
+      else if (config.except)
         sockets
-          .filter((item) => !config.to!.includes(item.id))
+          .filter((item) => !config.except!.includes(item.id))
           .forEach((item) => item.send(msg));
       else sockets.forEach((item) => item.send(msg));
   };

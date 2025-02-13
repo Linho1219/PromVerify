@@ -15,6 +15,7 @@ main {
   position: fixed;
   top: 80px;
   bottom: 0;
+  color-scheme: dark;
 }
 
 main > * {
